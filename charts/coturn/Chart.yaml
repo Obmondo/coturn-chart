@@ -4,10 +4,10 @@ type: application
 description: A Helm chart to deploy coturn
 home: "https://codeberg.org/small-hack/coturn-chart"
 
-version: 9.5.2
+version: 9.6.0
 
 # renovate: image=coturn/coturn
-appVersion: 4.8.0
+appVersion: 4.11.0
 
 sources:
   - "https://codeberg.org/small-hack/coturn-chart"
