@@ -1,0 +1,36 @@
+name: Release Chart
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      [closed]
+
+  workflow_dispatch:
+
+jobs:
+  harbor:
+    uses: small-hack/reusable-workflows/.forgejo/workflows/publish-charts.yaml@main
+    with:
+      harbor_url: harbor.smallhack.org
+      harbor_project: charts
+      force: false
+      chart_dir: charts
+      chart: coturn
+    secrets:
+      harbor_user: ${{ secrets.HARBOR_USER }}
+      harbor_token: ${{ secrets.HARBOR_TOKEN }}
+
+  forgejo:
+    uses: small-hack/reusable-workflows/.forgejo/workflows/publish-charts.yaml@main
+    with:
+      forgejo_url: https://git.smallhack.org
+      owner: small-hack
+      repo: coturn-chart
+      force: false
+      chart_dir: charts
+      chart: coturn
+      release: true
+    secrets:
+      forgejo_token: ${{ secrets.FORGE_TOKEN }}
