@@ -34,3 +34,16 @@ jobs:
       release: true
     secrets:
       forgejo_api_token: ${{ secrets.FORGE_TOKEN }}
+
+  codeberg:
+    uses: small-hack/reusable-workflows/.forgejo/workflows/publish-charts.yaml@main
+    with:
+      owner: small-hack
+      repo: coturn-chart
+      force: false
+      chart_dir: charts
+      chart: coturn
+      codeberg: true
+      release: false
+    secrets:
+      codeberg_token: ${{ secrets.CODEBERG_TOKEN }}
