@@ -33,4 +33,4 @@ jobs:
       chart: coturn
       release: true
     secrets:
-      forgejo_token: ${{ secrets.FORGE_TOKEN }}
+      forgejo_api_token: ${{ secrets.FORGE_TOKEN }}
