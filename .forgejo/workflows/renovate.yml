@@ -2,8 +2,8 @@ name: Renovate
 on:
   workflow_dispatch:
   schedule:
-  # This should be every hour at the 55th minute
-  - cron: '55 * * * *'
+  # This should be once a day at midnight
+  - cron: '0 0 * * *'
   push:
     branches:
       - main
