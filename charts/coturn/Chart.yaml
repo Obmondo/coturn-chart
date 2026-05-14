@@ -2,7 +2,7 @@ apiVersion: v2
 name: coturn
 type: application
 description: A Helm chart to deploy coturn
-home: "https://github.com/small-hack/coturn-chart"
+home: "https://codeberg.org/small-hack/coturn-chart"
 
 version: 9.5.1
 
@@ -10,12 +10,11 @@ version: 9.5.1
 appVersion: 4.8.0
 
 sources:
-  - "https://github.com/small-hack/coturn-chart"
+  - "https://codeberg.org/small-hack/coturn-chart"
 
 maintainers:
   - name: "jessebot"
-    email: "jessebot@linux.com"
-    url: "https://github.com/jessebot/"
+    url: "https://codeberg.org/jessebot/"
 
 dependencies:
   - name: postgresql
