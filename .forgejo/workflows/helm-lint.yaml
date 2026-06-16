@@ -32,5 +32,5 @@ jobs:
         run: |
           ct lint \
           --target-branch ${{ env.FORGEJO_HEAD_REF }} \
-          --charts charts/matrix
+          --charts charts/coturn
 
