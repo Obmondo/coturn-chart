@@ -29,10 +29,10 @@ Note that you still need to fill out the [`charts/coturn/values.yaml`](./charts/
 
 ```console
 # add the helm repo locally using the forgejo release (untested)
-helm repo add git.smallhack.org https://git.smallhack.org/api/packages/small-hack/helm
+helm repo add codeberg.org https://codeberg.org/api/packages/open-engineering/helm
 helm repo update
 
-helm install coturn git.smallhack.org/coturn-chart
+helm install coturn codeberg.org/coturn-chart
 ```
 
 ## Basics
