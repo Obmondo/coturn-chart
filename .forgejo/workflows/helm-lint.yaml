@@ -1,0 +1,36 @@
+name: Helm Lint
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, edited, labeled]
+    paths:
+      - 'charts/**'
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: self-hosted
+    timeout-minutes: 5
+    env:
+      RUNNER_TOOL_CACHE: /tmp
+      AGENT_TOOLSDIRECTORY: /tmp
+      RUN_TOOL_CACHE: /tmp
+    steps:
+      - name: Checkout
+        uses: https://git.smallhack.org/small-hack/checkout-action@main
+
+      - name: Add dependency chart repos
+        run: |
+          helm repo add git.smallhack.org \
+            https://git.smallhack.org/api/packages/small-hack/helm
+
+      - name: Run chart-testing (lint)
+        id: lint
+        run: |
+          ct lint \
+          --target-branch ${{ env.FORGEJO_HEAD_REF }} \
+          --charts charts/coturn
+

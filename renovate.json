@@ -12,41 +12,34 @@
         }
     ],
     "packageRules": [
+ 	    {
+	        "description": "Fix subchart archives for helm chart",
+	        "matchManagers": ["helmv3"],
+	        "postUpdateOptions": ["helmUpdateSubChartArchives"]
+	    },
         {
-            "description": "Fix subchart archives for helm chart",
-            "matchManagers": ["helmv3"],
-            "postUpdateOptions": ["helmUpdateSubChartArchives"]
-        },
-        {
-            "description": "Fix version in Chart.yaml after helmv3 dep patch updates",
-            "matchManagers": ["helmv3"],
+            "description": "patch updates: automerges. Digests, pins, rollbacks, replacements and pinDigest updates are deliberately ignored since in our use case, these need a manual decision about the version bump for the chart. This can be removed when https://github.com/renovatebot/renovate/issues/8231 is implemented and enabled.",
+            "matchManagers": ["helmv3", "helm-values", "regex"],
             "matchUpdateTypes": ["patch"],
-            "bumpVersion": "patch"
+            "labels": ["patch"],
+            "automerge": false,
+            "ignoreTests": false
         },
         {
-            "description": "Fix version in Chart.yaml after helmv3 dep minor updates",
-            "matchManagers": ["helmv3"],
+            "description": "minor updates: automerges. Digests, pins, rollbacks, replacements and pinDigest updates are deliberately ignored since in our use case, these need a manual decision about the version bump for the chart. This can be removed when https://github.com/renovatebot/renovate/issues/8231 is implemented and enabled.",
+            "matchManagers": ["helmv3", "helm-values", "regex"],
             "matchUpdateTypes": ["minor"],
-            "bumpVersion": "minor"
+            "labels": ["minor"],
+            "automerge": false,
+            "ignoreTests": false
         },
         {
-            "description": "Fix version in Chart.yaml after helmv3 dep major updates",
-            "matchManagers": ["helmv3"],
+            "description": "major updates: (no automerge) Digests, pins, rollbacks, replacements and pinDigest updates are deliberately ignored since in our use case, these need a manual decision about the version bump for the chart. This can be removed when https://github.com/renovatebot/renovate/issues/8231 is implemented and enabled.",
+            "matchManagers": ["helmv3", "helm-values", "regex"],
             "matchUpdateTypes": ["major"],
-            "bumpVersion": "major"
+            "labels": ["major"]
         },
         {
-            "description": "Bump helm chart versions by a patch when updating values files. This can be removed when https://github.com/renovatebot/renovate/issues/8231 is implemented and enabled.",
-            "matchManagers": ["helm-values", "regex"],
-            "postUpgradeTasks": {
-                "commands": [
-                    "scripts/bump-chart-version.sh '{{{updateType}}}'"
-                ],
-                "fileFilters": ["**/Chart.yaml"],
-                "executionMode": "branch"
-            }
-        },
-        { 
             "matchManagers": ["github-actions"],
             "matchPackageNames": ["renovatebot/github-action"],
             "matchUpdateTypes": ["patch", "minor"],

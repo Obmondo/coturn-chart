@@ -1,13 +1,14 @@
 name: Release Chart
 
 on:
-  pull_request:
+  push:
     branches:
-      - main
-    types:
-      [merged]
+      - 'main'
+    paths:
+      - 'charts/coturn/Chart.yaml'
 
-  workflow_dispatch:
+permissions:
+  contents: read
 
 jobs:
   harbor:
