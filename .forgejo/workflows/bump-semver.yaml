@@ -1,0 +1,21 @@
+name: Bump Semver
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  bump-semver:
+    if: forgejo.event.pull_request.merged == true
+    uses: small-hack/reusable-workflows/.forgejo/workflows/bump-semver-after-pr.yaml@main
+    with:
+      default_patch: false
+      skip_checks: ""
+      chart: ./charts/coturn
+    secrets:
+      pat_for_checkout: ${{ secrets.PAT_FOR_CHECKOUT }}

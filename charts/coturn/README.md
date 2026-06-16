@@ -1,6 +1,6 @@
 # coturn
 
-![Version: 9.6.0](https://img.shields.io/badge/Version-9.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.11.0](https://img.shields.io/badge/AppVersion-4.11.0-informational?style=flat-square)
+![Version: 9.7.0](https://img.shields.io/badge/Version-9.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.13.1](https://img.shields.io/badge/AppVersion-4.13.1-informational?style=flat-square)
 
 A Helm chart to deploy coturn
 
@@ -42,7 +42,7 @@ A Helm chart to deploy coturn
 | coturn.auth.secretKeys.username | string | `"username"` | key in existing secret for turn server user |
 | coturn.auth.staticAuthSecret | string | `""` | 'Static' authentication secret value (a string) for TURN REST API only. If not set, then the turn server will try to use the 'dynamic' value in the turn_secret table in the user database (if present). The database-stored  value can be changed on-the-fly by a separate program, so this is why that mode is considered 'dynamic'. |
 | coturn.auth.username | string | `"coturn"` | username for the main user of the turn server |
-| coturn.extraEnvVars | list | `[]` | Extra environment variables to pass to the Coturn container example:   - name: STATIC_AUTH_SECRET_VAL_OPT     value: supersecretpassword123abcyes |
+| coturn.extraEnvVars | list | `[]` | Extra environment variables to pass to the Coturn container |
 | coturn.extraTurnserverConfiguration | string | `"verbose\n"` | extra configuration for turnserver.conf |
 | coturn.initContainer.image.repository | string | `"mikefarah/yq"` | registry and repository for init container config generator image |
 | coturn.initContainer.image.tag | string | `"latest"` | tag for init container config generator image |
