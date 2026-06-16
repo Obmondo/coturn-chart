@@ -3,19 +3,14 @@ name: coturn
 type: application
 description: A Helm chart to deploy coturn
 home: "https://codeberg.org/small-hack/coturn-chart"
-
-version: 9.7.0
-
+version: 9.7.1
 # renovate: image=coturn/coturn
 appVersion: 4.13.1
-
 sources:
   - "https://codeberg.org/small-hack/coturn-chart"
-
 maintainers:
   - name: "jessebot"
     url: "https://codeberg.org/jessebot/"
-
 dependencies:
   - name: postgresql
     version: 16.7.27
