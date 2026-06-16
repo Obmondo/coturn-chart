@@ -38,7 +38,7 @@ jobs:
   codeberg:
     uses: small-hack/reusable-workflows/.forgejo/workflows/publish-charts.yaml@main
     with:
-      owner: small-hack
+      owner: open-engineering
       repo: coturn-chart
       force: false
       chart_dir: charts
