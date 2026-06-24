@@ -3,7 +3,7 @@ name: coturn
 type: application
 description: A Helm chart to deploy coturn
 home: "https://codeberg.org/small-hack/coturn-chart"
-version: 9.7.1
+version: 9.8.0
 # renovate: image=coturn/coturn
 appVersion: 4.14.0
 sources:
