@@ -6,9 +6,6 @@ on:
     branches:
       - main
 
-permissions:
-  contents: read
-
 jobs:
   bump-semver:
     if: forgejo.event.pull_request.merged == true

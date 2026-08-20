@@ -4,9 +4,6 @@ on:
   pull_request:
     types: [opened, synchronize, edited, labeled]
 
-permissions:
-  contents: read
-
 jobs:
   check-pr-labels:
     uses: oeng/reusable-workflows/.forgejo/workflows/check-pr-labels.yaml@main

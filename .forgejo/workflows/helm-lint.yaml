@@ -7,9 +7,6 @@ on:
     paths:
       - 'charts/**'
 
-permissions:
-  contents: read
-
 jobs:
   lint:
     runs-on: self-hosted

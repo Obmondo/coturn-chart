@@ -8,9 +8,6 @@ on:
     paths:
       - 'charts/coturn/Chart.yaml'
 
-permissions:
-  contents: read
-
 jobs:
   harbor:
     uses: oeng/reusable-workflows/.forgejo/workflows/publish-charts.yaml@main
@@ -21,7 +18,7 @@ jobs:
       chart_dir: charts
       chart: coturn
     secrets:
-      harbor_user: ${{ secrets.HARBOR_USER }}
+      harbor_user: ${{ secrets.HARBOR_USERNAME }}
       harbor_token: ${{ secrets.HARBOR_TOKEN }}
 
   forgejo:
