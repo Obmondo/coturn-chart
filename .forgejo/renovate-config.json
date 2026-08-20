@@ -4,6 +4,6 @@
   "username": "renovate-release",
   "gitAuthor": "Renovate Bot <bot@renovateapp.com>",
   "platform": "forgejo",
-  "repositories": ["small-hack/coturn-chart"],
+  "repositories": ["oeng/coturn-chart"],
   "allowedCommands": ["^scripts"]
 }

@@ -1,6 +1,7 @@
 name: Release Chart
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - 'main'
@@ -12,9 +13,9 @@ permissions:
 
 jobs:
   harbor:
-    uses: small-hack/reusable-workflows/.forgejo/workflows/publish-charts.yaml@main
+    uses: oeng/reusable-workflows/.forgejo/workflows/publish-charts.yaml@main
     with:
-      harbor_url: harbor.smallhack.org
+      harbor_url: harbor.open.engineering
       harbor_project: charts
       force: false
       chart_dir: charts
@@ -24,10 +25,10 @@ jobs:
       harbor_token: ${{ secrets.HARBOR_TOKEN }}
 
   forgejo:
-    uses: small-hack/reusable-workflows/.forgejo/workflows/publish-charts.yaml@main
+    uses: oeng/reusable-workflows/.forgejo/workflows/publish-charts.yaml@main
     with:
-      forgejo_url: https://git.smallhack.org
-      owner: small-hack
+      forgejo_url: https://git.open.engineering
+      owner: oeng
       repo: coturn-chart
       force: false
       chart_dir: charts
@@ -37,7 +38,7 @@ jobs:
       forgejo_api_token: ${{ secrets.FORGE_TOKEN }}
 
   codeberg:
-    uses: small-hack/reusable-workflows/.forgejo/workflows/publish-charts.yaml@main
+    uses: oeng/reusable-workflows/.forgejo/workflows/publish-charts.yaml@main
     with:
       owner: open-engineering
       repo: coturn-chart

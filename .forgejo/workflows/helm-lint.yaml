@@ -20,12 +20,12 @@ jobs:
       RUN_TOOL_CACHE: /tmp
     steps:
       - name: Checkout
-        uses: https://git.smallhack.org/small-hack/checkout-action@main
+        uses: https://git.open.engineering/oeng/checkout-action@main
 
       - name: Add dependency chart repos
         run: |
-          helm repo add git.smallhack.org \
-            https://git.smallhack.org/api/packages/small-hack/helm
+          helm repo add git.open.engineering \
+            https://git.open.engineering/api/packages/oeng/helm
 
       - name: Run chart-testing (lint)
         id: lint

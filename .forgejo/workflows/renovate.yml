@@ -14,5 +14,5 @@ on:
       - "scripts/**"
 jobs:
   renovate:
-    uses: small-hack/reusable-workflows/.forgejo/workflows/renovate.yaml@main
+    uses: oeng/reusable-workflows/.forgejo/workflows/renovate.yaml@main
     secrets: inherit

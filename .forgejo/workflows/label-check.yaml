@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   check-pr-labels:
-    uses: small-hack/reusable-workflows/.forgejo/workflows/check-pr-labels.yaml@main
+    uses: oeng/reusable-workflows/.forgejo/workflows/check-pr-labels.yaml@main
     with:
       default_patch: false
       skip_checks: ""
