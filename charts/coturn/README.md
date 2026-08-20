@@ -4,7 +4,7 @@
 
 A Helm chart to deploy coturn
 
-**Homepage:** <https://codeberg.org/small-hack/coturn-chart>
+**Homepage:** <https://codeberg.org/open-engineering/coturn-chart>
 
 ## Maintainers
 
@@ -14,7 +14,7 @@ A Helm chart to deploy coturn
 
 ## Source Code
 
-* <https://codeberg.org/small-hack/coturn-chart>
+* <https://codeberg.org/open-engineering/coturn-chart>
 
 ## Requirements
 

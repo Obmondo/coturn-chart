@@ -1,10 +1,10 @@
 # Coturn Helm Chart
-<a href="https://git.smallhack.org/small-hack/coturn-chart/releases"><img src="https://img.shields.io/gitea/v/release/small-hack/coturn-chart?gitea_url=https%3A%2F%2Fgit.smallhack.org&logo=Forgejo"></a>
+<a href="https://git.open.engineering/oeng/coturn-chart/releases"><img src="https://img.shields.io/gitea/v/release/oeng/coturn-chart?gitea_url=https%3A%2F%2Fgit.open.engineering&logo=Forgejo"></a>
 
 An unofficial [coturn](https://github.com/coturn/coturn) helm chart using the official [coturn docker image](https://hub.docker.com/r/coturn/coturn).
 
 > [!note]
-> This repo is mirrored to codeberg, where you can submit [Issues](https://codeberg.org/small-hack/coturn-chart/issues) and [Pull Requests](https://codeberg.org/small-hack/coturn-chart/pulls).
+> This repo is mirrored to codeberg, where you can submit [Issues](https://codeberg.org/oeng/coturn-chart/issues) and [Pull Requests](https://codeberg.org/oeng/coturn-chart/pulls).
 
 * [Usage](#usage)
   * [TLDR](#tldr)
@@ -253,7 +253,7 @@ Source: [Tutorial for turnutils_uclient and Coturn server](https://gist.github.c
 
 # Status and Contributing
 
-This is actively maintained by both live developers and [renovateBot] via a scheduled Forgejo Action. If you'd like to contribute, please read the [CONTRIBUTING.md](./CONTRIBUTING.md) feel free to open a PR :) If you'd like a feature or want to report a bug, please do that in the Codeberg Issues. If you know coturn and k8s well enough, please also feel free to scan the issues and help others <3 We recently moved the repo from jessebot's account to the small-hack org where we maintain all our helm charts.
+This is actively maintained by both live developers and [renovateBot] via a scheduled Forgejo Action. If you'd like to contribute, please read the [CONTRIBUTING.md](./CONTRIBUTING.md) feel free to open a PR :) If you'd like a feature or want to report a bug, please do that in the Codeberg Issues. If you know coturn and k8s well enough, please also feel free to scan the issues and help others <3
 
 ## Thanks
 

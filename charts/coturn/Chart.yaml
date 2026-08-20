@@ -2,12 +2,12 @@ apiVersion: v2
 name: coturn
 type: application
 description: A Helm chart to deploy coturn
-home: "https://codeberg.org/small-hack/coturn-chart"
+home: "https://codeberg.org/open-engineering/coturn-chart"
 version: 9.9.0
 # renovate: image=coturn/coturn
 appVersion: 4.17.2
 sources:
-  - "https://codeberg.org/small-hack/coturn-chart"
+  - "https://codeberg.org/open-engineering/coturn-chart"
 maintainers:
   - name: "jessebot"
     url: "https://codeberg.org/jessebot/"
