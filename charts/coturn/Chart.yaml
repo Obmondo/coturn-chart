@@ -6,17 +6,21 @@ home: "https://codeberg.org/open-engineering/coturn-chart"
 version: 9.9.1
 # renovate: image=coturn/coturn
 appVersion: 4.17.2
+
 sources:
   - "https://codeberg.org/open-engineering/coturn-chart"
+
 maintainers:
   - name: "jessebot"
     url: "https://codeberg.org/jessebot/"
+
 dependencies:
   - name: postgresql
     version: 16.7.27
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
-  - name: mysql
-    version: 13.0.4
-    repository: oci://registry-1.docker.io/bitnamicharts
+  - name: pxc-db
+    alias: mysql
+    version: 1.20.0
+    repository: https://percona.github.io/percona-helm-charts
     condition: mysql.enabled
