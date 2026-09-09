@@ -23,6 +23,8 @@ jobs:
         run: |
           helm repo add git.open.engineering \
             https://git.open.engineering/api/packages/oeng/helm
+          helm repo add percona \
+            https://percona.github.io/percona-helm-charts/
 
       - name: Run chart-testing (lint)
         id: lint
