@@ -15,10 +15,11 @@ maintainers:
     url: "https://codeberg.org/jessebot/"
 
 dependencies:
-  - name: postgresql
-    version: 16.7.27
-    repository: oci://registry-1.docker.io/bitnamicharts
-    condition: postgresql.enabled
+  - name: cluster
+    alias: cnpg
+    version: 0.8.1
+    repository: https://cloudnative-pg.github.io/charts
+    condition: cnpg.enabled
   - name: pxc-db
     alias: mysql
     version: 1.20.0

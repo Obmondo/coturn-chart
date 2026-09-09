@@ -20,8 +20,8 @@ A Helm chart to deploy coturn
 
 | Repository | Name | Version |
 |------------|------|---------|
+| https://cloudnative-pg.github.io/charts | cnpg(cluster) | 0.8.1 |
 | https://percona.github.io/percona-helm-charts | mysql(pxc-db) | 1.20.0 |
-| oci://registry-1.docker.io/bitnamicharts | postgresql | 16.7.27 |
 
 ## Values
 
@@ -30,6 +30,42 @@ A Helm chart to deploy coturn
 | certificate.enabled | bool | `false` | Enables auto issuing certificates over cert-manager certificates https://cert-manager.io/docs/concepts/certificate/ |
 | certificate.issuerName | string | `"letsencrypt-staging"` | name of cert-manager issuer to use for cert generation. change to production issuer when you're stable |
 | certificate.secret | string | `"turn-tls"` | name of secret to create for ssl cert |
+| cnpg.backups.destinationPath | string | `"s3://coturn-db"` | this should be replace with your bucket, if your bucket is not called coturn |
+| cnpg.backups.enabled | bool | `false` | enable backups, recommended |
+| cnpg.backups.endpointURL | string | `"http://seaweedfs-s3.coturn.svc.cluster.local:8333"` | this is just an example, but you could use any s3 |
+| cnpg.backups.provider | string | `"s3"` | you can use any supported provider, but we find s3 handy |
+| cnpg.backups.retentionPolicy | string | `"2d"` | retain as many days as you'd like |
+| cnpg.backups.s3.accessKey | string | `"ACCESS_KEY_ID"` |  |
+| cnpg.backups.s3.bucket | string | `"coturn-db"` |  |
+| cnpg.backups.s3.region | string | `"auto"` |  |
+| cnpg.backups.s3.secretKey | string | `"ACCESS_SECRET_KEY"` |  |
+| cnpg.backups.scheduledBackups[0].backupOwnerReference | string | `"self"` |  |
+| cnpg.backups.scheduledBackups[0].method | string | `"barmanObjectStore"` |  |
+| cnpg.backups.scheduledBackups[0].name | string | `"coturn-db-backup"` |  |
+| cnpg.backups.scheduledBackups[0].schedule | string | `"0 0 0 * * *"` |  |
+| cnpg.backups.secret.create | bool | `false` |  |
+| cnpg.backups.secret.name | string | `"s3-db-credentials"` |  |
+| cnpg.backups.wal.compression | string | `"gzip"` |  |
+| cnpg.backups.wal.encryption | string | `"AES256"` |  |
+| cnpg.backups.wal.maxParallel | int | `8` |  |
+| cnpg.certificates | object | `{}` | cert configuration for this postgresql cluster |
+| cnpg.cluster.annotations."cnpg.io/skipEmptyWalArchiveCheck" | string | `"enabled"` | allow restoring to existing s3 buckets |
+| cnpg.cluster.initdb.database | string | `"coturn"` | name of the database for coturn |
+| cnpg.cluster.initdb.owner | string | `"coturn"` | name of the owner of the database for coturn |
+| cnpg.cluster.initdb.secret.name | string | `"coturn-db-secret"` |  |
+| cnpg.cluster.instances | int | `2` | how many instances to deploy for this postgres cluster |
+| cnpg.cluster.logLevel | string | `"warn"` | logging level |
+| cnpg.cluster.monitoring.enabled | bool | `false` | enable monitoring |
+| cnpg.cluster.monitoring.podMonitor.enabled | bool | `true` | enable a promtheus podMonitor resource |
+| cnpg.cluster.postgresql.pg_hba | list | `["host all all 0.0.0.0/0 md5"]` | pg_hba config for the postgres cluster |
+| cnpg.cluster.storage.size | string | `"10Gi"` | size of the PVCs that CNPG will create |
+| cnpg.cluster.storage.storageClass | string | `"local-path"` | storageClass for the PVCs CNPG will create |
+| cnpg.enabled | bool | `true` | Whether to deploy the Cloud Native Postgresql Cluster sub chart If cnpg.enabled is set to true, externalDatabase.enabled must be set to false else if externalDatabase.enabled is set to true, cnpg.enabled must be set to false. NOTE: if using this Cluster chart, you must already have Cloud Native PostgreSQL Operator installed! |
+| cnpg.fullnameOverride | string | `"coturn-postgres"` |  |
+| cnpg.mode | string | `"standalone"` | Cluster mode of operation. Available modes: * `standalone` - default mode. Creates new or updates an existing CNPG cluster. * `replica` - Creates a replica cluster from an existing CNPG cluster. * `recovery` - Same as standalone but creates a cluster from a backup, object store or via pg_basebackup. |
+| cnpg.name | string | `"coturn-postgres"` |  |
+| cnpg.type | string | `"postgresql"` | this should always be postgresql as that's all we support from this chart |
+| cnpg.version.postgresql | string | `"18"` | PostgreSQL major version to use |
 | containerSecurityContext.allowPrivilegeEscalation | bool | `false` | allow priviledged access |
 | containerSecurityContext.capabilities.add | list | `["NET_BIND_SERVICE"]` | linux cabilities to allow for the coturn k8s pod |
 | containerSecurityContext.capabilities.drop | list | `["ALL"]` | linux cabilities to disallow for the coturn k8s pod |
@@ -53,6 +89,8 @@ A Helm chart to deploy coturn
 | coturn.ports.min | int | `49152` | minimum ephemeral port for coturn |
 | coturn.ports.tlsListening | int | `5349` | secure listening port |
 | coturn.realm | string | `"turn.example.com"` | hostname for the coturn server realm |
+| dbReadiness.image.repository | string | `"postgres"` | container registry and repo for database readiness docker image change this if using mysql! |
+| dbReadiness.image.tag | string | `"15-alpine"` | container tag for coturn database readiness docker image change this if using mysql! |
 | deployment.dnsPolicy | string | `"ClusterFirst"` |  |
 | deployment.hostNetwork | bool | `false` |  |
 | deployment.type | string | `"Deployment"` |  |
@@ -60,8 +98,6 @@ A Helm chart to deploy coturn
 | externalDatabase.enabled | bool | `false` | enables the use of postgresql instead of the default sqlite to use the bundled subchart, enable this, and postgresql.enable |
 | externalDatabase.existingSecret | string | `""` | name of existing Secret to use for postgresql credentials |
 | externalDatabase.hostname | string | `""` | required if externalDatabase.enabled: true and postgresql.enabled: false |
-| externalDatabase.image.repository | string | `""` | container registry and repo for database readiness docker image |
-| externalDatabase.image.tag | string | `""` | container tag for coturn database readiness docker image |
 | externalDatabase.password | string | `""` | password for database, ignored if existingSecret is passed in |
 | externalDatabase.secretKeys.database | string | `""` | key in existing Secret to use for the database name |
 | externalDatabase.secretKeys.hostname | string | `""` | key in existing Secret to use for the db's hostname |
@@ -177,8 +213,8 @@ A Helm chart to deploy coturn
 | mysql.users[0].grants[8] | string | `"REFERENCES"` |  |
 | mysql.users[0].grants[9] | string | `"CREATE VIEW"` |  |
 | mysql.users[0].name | string | `"coturn"` |  |
-| mysql.users[0].passwordSecretRef.key | string | `"mysql-password"` |  |
-| mysql.users[0].passwordSecretRef.name | string | `"db-credentials"` |  |
+| mysql.users[0].passwordSecretRef.key | string | `"password"` |  |
+| mysql.users[0].passwordSecretRef.name | string | `"coturn-db-secret"` |  |
 | mysql.users[0].withGrantOption | bool | `true` |  |
 | nameOverride | string | `""` | different name for the helm release |
 | podSecurityContext.enabled | bool | `true` | Enables Pod Security Context |
@@ -187,17 +223,6 @@ A Helm chart to deploy coturn
 | podSecurityContext.runAsNonRoot | bool | `true` | for all Containers in the Pod, all processes run as non-root |
 | podSecurityContext.runAsUser | int | `1000` | for all Containers in the Pod, all processes run w/ this userID |
 | podSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` | Filter a process's system calls |
-| postgresql.enabled | bool | `false` | enables bitnami postgresql subchart, you can disable to use external db |
-| postgresql.global.postgresql.auth.database | string | `"coturn"` | database to create, ignored if existingSecret is passed in |
-| postgresql.global.postgresql.auth.existingSecret | string | `""` | name of existing Secret to use for postgresql credentials |
-| postgresql.global.postgresql.auth.password | string | `""` | password for db, autogenerated if empty & existingSecret empty |
-| postgresql.global.postgresql.auth.secretKeys.adminPasswordKey | string | `"postgresPassword"` | key in existing Secret to use for postgres admin user's password |
-| postgresql.global.postgresql.auth.secretKeys.database | string | `"database"` | key in existingSecret for database to create |
-| postgresql.global.postgresql.auth.secretKeys.hostname | string | `"hostname"` | key in existingSecret for database to create |
-| postgresql.global.postgresql.auth.secretKeys.userPasswordKey | string | `"password"` | key in existing Secret to use for coturn user's password |
-| postgresql.global.postgresql.auth.secretKeys.username | string | `"username"` | key in exsiting Secret to use for the coturn user |
-| postgresql.global.postgresql.auth.username | string | `"coturn"` | username for database, ignored if existingSecret is passed in |
-| postgresql.primary.initdb.scriptsConfigMap | string | `""` | ConfigMap with scripts to be run at first boot |
 | replicas | int | `1` |  |
 | resources | object | `{}` | ref: kubernetes.io/docs/concepts/configuration/manage-resources-containers |
 | service.externalTrafficPolicy | string | `"Cluster"` | determines how external traffic is routed to services. Options:   Cluster: mask client source IP   Local: preserve client source IP (requires service type of NodePort or LoadBalancer) |
