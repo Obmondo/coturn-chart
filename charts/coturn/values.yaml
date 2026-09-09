@@ -48,7 +48,7 @@ dbReadiness:
     repository: "postgres"
     # -- container tag for coturn database readiness docker image
     # change this if using mysql!
-    tag: "15-alpine"
+    tag: "18-alpine"
 
 # -- ref: kubernetes.io/docs/concepts/configuration/manage-resources-containers
 resources: {}
