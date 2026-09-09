@@ -1,6 +1,6 @@
 # coturn
 
-![Version: 10.0.0](https://img.shields.io/badge/Version-10.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.18.0](https://img.shields.io/badge/AppVersion-4.18.0-informational?style=flat-square)
+![Version: 10.1.0](https://img.shields.io/badge/Version-10.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.18.0](https://img.shields.io/badge/AppVersion-4.18.0-informational?style=flat-square)
 
 A Helm chart to deploy coturn
 
@@ -90,7 +90,7 @@ A Helm chart to deploy coturn
 | coturn.ports.tlsListening | int | `5349` | secure listening port |
 | coturn.realm | string | `"turn.example.com"` | hostname for the coturn server realm |
 | dbReadiness.image.repository | string | `"postgres"` | container registry and repo for database readiness docker image change this if using mysql! |
-| dbReadiness.image.tag | string | `"15-alpine"` | container tag for coturn database readiness docker image change this if using mysql! |
+| dbReadiness.image.tag | string | `"18-alpine"` | container tag for coturn database readiness docker image change this if using mysql! |
 | deployment.dnsPolicy | string | `"ClusterFirst"` |  |
 | deployment.hostNetwork | bool | `false` |  |
 | deployment.type | string | `"Deployment"` |  |
