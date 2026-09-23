@@ -382,7 +382,12 @@ coturn:
       # -- registry and repository for init container config generator image
       repository: mikefarah/yq
       # -- tag for init container config generator image
-      tag: latest
+      tag: 4.53.6
+      # -- optional multi-arch manifest digest; when set, the image is resolved
+      #    by digest so a moved tag cannot change what runs
+      digest: ""
+      # -- image pull policy for the init container
+      pullPolicy: IfNotPresent
 
 # k8s pod security context:
 # https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
