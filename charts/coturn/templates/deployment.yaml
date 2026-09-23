@@ -19,6 +19,18 @@ spec:
     spec:
       hostNetwork: {{ and .Values.deployment .Values.deployment.hostNetwork }}
       dnsPolicy: {{ (.Values.deployment).dnsPolicy | default "ClusterFirst" }}
+      {{- with (.Values.deployment).nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with (.Values.deployment).tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with (.Values.deployment).affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

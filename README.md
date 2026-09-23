@@ -6,6 +6,28 @@ An unofficial [coturn](https://github.com/coturn/coturn) helm chart using the of
 > [!note]
 > This repo is mirrored to codeberg, where you can submit [Issues](https://codeberg.org/oeng/coturn-chart/issues) and [Pull Requests](https://codeberg.org/oeng/coturn-chart/pulls).
 
+> [!important]
+> This is Obmondo's fork of [open-engineering/coturn-chart](https://codeberg.org/open-engineering/coturn-chart),
+> published to `oci://ghcr.io/obmondo/charts`. Changes on top of upstream 10.1.0:
+>
+> * `templates/daemonset.yaml` migrated off the removed `.Values.postgresql`, which
+>   upstream 10.1.0 left behind when it moved the Deployment to `cnpg` — without this
+>   `deployment.type: DaemonSet` fails to render at all.
+> * `nodeSelector`, `tolerations` and `affinity` exposed on the coturn pods, so the
+>   pods can be pinned to the nodes the stun/turn DNS records point at.
+> * `cnpg.enabled` defaulted back to `false`, matching 9.x, so a default install
+>   keeps the built-in sqlite userdb and needs no CNPG operator.
+> * `db.envVars` emits the `DATABASE_*` variables only when `externalDatabase.enabled`
+>   is set. Upstream emits them unconditionally, so a default install asks the kubelet
+>   for keys in a Secret that is rendered empty and never starts.
+>
+> The bundled `cnpg` and `mysql` subchart paths are not supported here: both point at a
+> `coturn-db-secret` that the chart only creates when the release happens to be named
+> `coturn`, and both write an unencoded `hostname` into that Secret, which the API
+> server rejects. Use `externalDatabase`, or the built-in sqlite userdb.
+>
+> Licensed GPL-3.0, as upstream.
+
 * [Usage](#usage)
   * [TLDR](#tldr)
   * [Basics](#basics)
