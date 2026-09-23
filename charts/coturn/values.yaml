@@ -9,6 +9,13 @@ deployment:
   hostNetwork: false
   # When hostNetwork is set to true, the dnsPolicy must be set to ClusterFirstWithHostNet so Cluster internal services are still resolvable
   dnsPolicy: "ClusterFirst"
+  # -- node selector for the coturn pods. With hostNetwork this decides which
+  # node IPs answer STUN/TURN, so it has to match the stun/turn DNS records
+  nodeSelector: {}
+  # -- tolerations for the coturn pods, e.g. to run on tainted control planes
+  tolerations: []
+  # -- affinity rules for the coturn pods
+  affinity: {}
 
 service:
   # -- The type of service to deploy for routing Coturn traffic.
