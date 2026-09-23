@@ -377,6 +377,11 @@ coturn:
   extraTurnserverConfiguration: |
     verbose
 
+  # -- additional denied-peer-ip entries, one config line per item. Accepts a
+  #    single address or a coturn range. For addresses the chart cannot know,
+  #    such as the node public IPs when coturn runs with hostNetwork.
+  extraDeniedPeerIPs: []
+
   initContainer:
     image:
       # -- registry and repository for init container config generator image
