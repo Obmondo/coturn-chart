@@ -1,0 +1,92 @@
+---
+name: Chart checks
+
+# Renders the chart in every configuration it claims to support, so a template
+# change cannot merge if it breaks one of them. Upstream 10.1.0 shipped a
+# DaemonSet that could not render at all, because only the Deployment path was
+# ever exercised.
+
+"on":
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'charts/**'
+      - '.github/workflows/chart-checks.yaml'
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v5
+        with:
+          version: 'v3.21.3'
+
+      - name: Resolve dependencies
+        run: helm dependency update charts/coturn
+
+      - name: Lint
+        run: helm lint charts/coturn
+
+      - name: Render every configuration
+        run: |
+          set -eu
+
+          render() {
+            echo "==> helm template $*"
+            helm template check charts/coturn "$@" >/dev/null
+          }
+
+          # Supported: the built-in sqlite userdb, or an external database.
+          render
+          render --set deployment.type=DaemonSet
+          render --set externalDatabase.enabled=true --set externalDatabase.type=postgresql
+          render --set externalDatabase.enabled=true --set externalDatabase.type=postgresql \
+                 --set deployment.type=DaemonSet
+
+          # Unsupported here, but they must still render: a template error in
+          # these paths is a template error everywhere.
+          render --set cnpg.enabled=true
+          render --set mysql.enabled=true
+
+      - name: Assert the fixed regressions stay fixed
+        run: |
+          set -eu
+
+          # The DaemonSet has to produce a DaemonSet. In 10.1.0 it referenced
+          # values that had been removed and failed to render at all.
+          helm template check charts/coturn --set deployment.type=DaemonSet \
+            | grep -q '^kind: DaemonSet'
+
+          # With no database configured, nothing may ask the kubelet for keys in
+          # a Secret that renders empty - that is a CreateContainerConfigError.
+          for type in Deployment DaemonSet; do
+            if helm template check charts/coturn --set deployment.type="$type" \
+                 | grep -q 'name: DATABASE_'; then
+              echo "DATABASE_* env vars are set with no database enabled (${type})"
+              exit 1
+            fi
+          done
+
+          # Secret data has to be base64: an unencoded value is rejected by the
+          # API server at apply time, long after the template looked fine. Only
+          # the externalDatabase path is checked, because the cnpg and mysql
+          # branches write an unencoded hostname today - an upstream defect in
+          # paths this fork does not support.
+          helm template check charts/coturn --set externalDatabase.enabled=true \
+            --set externalDatabase.hostname=db.example.com \
+            | awk '/^kind: Secret$/,/^---$/' \
+            | awk '/^data:/{d=1;next} /^[^ ]/{d=0} d && $2 != "" {print $2}' \
+            | tr -d '"' \
+            | while read -r value; do
+                echo "$value" | base64 -d >/dev/null 2>&1 || {
+                  echo "Secret data value is not valid base64: ${value}"
+                  exit 1
+                }
+              done
