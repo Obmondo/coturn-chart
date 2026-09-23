@@ -60,7 +60,7 @@ A Helm chart to deploy coturn
 | cnpg.cluster.postgresql.pg_hba | list | `["host all all 0.0.0.0/0 md5"]` | pg_hba config for the postgres cluster |
 | cnpg.cluster.storage.size | string | `"10Gi"` | size of the PVCs that CNPG will create |
 | cnpg.cluster.storage.storageClass | string | `"local-path"` | storageClass for the PVCs CNPG will create |
-| cnpg.enabled | bool | `true` | Whether to deploy the Cloud Native Postgresql Cluster sub chart If cnpg.enabled is set to true, externalDatabase.enabled must be set to false else if externalDatabase.enabled is set to true, cnpg.enabled must be set to false. NOTE: if using this Cluster chart, you must already have Cloud Native PostgreSQL Operator installed! |
+| cnpg.enabled | bool | `false` | Whether to deploy the Cloud Native Postgresql Cluster sub chart If cnpg.enabled is set to true, externalDatabase.enabled must be set to false else if externalDatabase.enabled is set to true, cnpg.enabled must be set to false. NOTE: if using this Cluster chart, you must already have Cloud Native PostgreSQL Operator installed! |
 | cnpg.fullnameOverride | string | `"coturn-postgres"` |  |
 | cnpg.mode | string | `"standalone"` | Cluster mode of operation. Available modes: * `standalone` - default mode. Creates new or updates an existing CNPG cluster. * `replica` - Creates a replica cluster from an existing CNPG cluster. * `recovery` - Same as standalone but creates a cluster from a backup, object store or via pg_basebackup. |
 | cnpg.name | string | `"coturn-postgres"` |  |
@@ -91,8 +91,11 @@ A Helm chart to deploy coturn
 | coturn.realm | string | `"turn.example.com"` | hostname for the coturn server realm |
 | dbReadiness.image.repository | string | `"postgres"` | container registry and repo for database readiness docker image change this if using mysql! |
 | dbReadiness.image.tag | string | `"18-alpine"` | container tag for coturn database readiness docker image change this if using mysql! |
+| deployment.affinity | object | `{}` | affinity rules for the coturn pods |
 | deployment.dnsPolicy | string | `"ClusterFirst"` |  |
 | deployment.hostNetwork | bool | `false` |  |
+| deployment.nodeSelector | object | `{}` | node selector for the coturn pods. With hostNetwork this decides which node IPs answer STUN/TURN, so it has to match the stun/turn DNS records |
+| deployment.tolerations | list | `[]` | tolerations for the coturn pods, e.g. to run on tainted control planes |
 | deployment.type | string | `"Deployment"` |  |
 | externalDatabase.database | string | `""` | database to create, ignored if existingSecret is passed in |
 | externalDatabase.enabled | bool | `false` | enables the use of postgresql instead of the default sqlite to use the bundled subchart, enable this, and postgresql.enable |
