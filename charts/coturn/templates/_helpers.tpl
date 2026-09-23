@@ -36,7 +36,7 @@ Helper function to get the coturn secret containing db credentials
 {{- else if and .Values.cnpg.enabled .Values.cnpg.cluster.initdb.secret.name -}}
 {{ .Values.cnpg.cluster.initdb.secret.name }}
 {{- else if .Values.mysql.enabled -}}
-{{- with (first .Values.mysql.users) }}
+{{- with (first .Values.mysql.users) -}}
 {{ .passwordSecretRef.name }}
 {{- end }}
 {{- else -}}
@@ -56,6 +56,7 @@ Helper function to get the coturn secret containing admin coturn credentials
 {{- end }}
 
 {{- define "db.envVars" -}}
+{{- if or .Values.externalDatabase.enabled .Values.cnpg.enabled .Values.mysql.enabled -}}
 - name: DATABASE_HOSTNAME
   valueFrom:
     secretKeyRef:
@@ -99,4 +100,5 @@ Helper function to get the coturn secret containing admin coturn credentials
       {{- else }}
       key: database
       {{- end }}
+{{- end }}
 {{- end }}
