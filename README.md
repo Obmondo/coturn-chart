@@ -17,6 +17,14 @@ An unofficial [coturn](https://github.com/coturn/coturn) helm chart using the of
 >   pods can be pinned to the nodes the stun/turn DNS records point at.
 > * `cnpg.enabled` defaulted back to `false`, matching 9.x, so a default install
 >   keeps the built-in sqlite userdb and needs no CNPG operator.
+> * `db.envVars` emits the `DATABASE_*` variables only when `externalDatabase.enabled`
+>   is set. Upstream emits them unconditionally, so a default install asks the kubelet
+>   for keys in a Secret that is rendered empty and never starts.
+>
+> The bundled `cnpg` and `mysql` subchart paths are not supported here: both point at a
+> `coturn-db-secret` that the chart only creates when the release happens to be named
+> `coturn`, and both write an unencoded `hostname` into that Secret, which the API
+> server rejects. Use `externalDatabase`, or the built-in sqlite userdb.
 >
 > Licensed GPL-3.0, as upstream.
 

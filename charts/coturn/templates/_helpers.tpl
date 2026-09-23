@@ -56,7 +56,7 @@ Helper function to get the coturn secret containing admin coturn credentials
 {{- end }}
 
 {{- define "db.envVars" -}}
-{{- if or .Values.externalDatabase.enabled .Values.cnpg.enabled .Values.mysql.enabled -}}
+{{- if .Values.externalDatabase.enabled -}}
 - name: DATABASE_HOSTNAME
   valueFrom:
     secretKeyRef:
