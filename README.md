@@ -6,6 +6,20 @@ An unofficial [coturn](https://github.com/coturn/coturn) helm chart using the of
 > [!note]
 > This repo is mirrored to codeberg, where you can submit [Issues](https://codeberg.org/oeng/coturn-chart/issues) and [Pull Requests](https://codeberg.org/oeng/coturn-chart/pulls).
 
+> [!important]
+> This is Obmondo's fork of [open-engineering/coturn-chart](https://codeberg.org/open-engineering/coturn-chart),
+> published to `oci://ghcr.io/obmondo/charts`. Changes on top of upstream 10.1.0:
+>
+> * `templates/daemonset.yaml` migrated off the removed `.Values.postgresql`, which
+>   upstream 10.1.0 left behind when it moved the Deployment to `cnpg` — without this
+>   `deployment.type: DaemonSet` fails to render at all.
+> * `nodeSelector`, `tolerations` and `affinity` exposed on the coturn pods, so the
+>   pods can be pinned to the nodes the stun/turn DNS records point at.
+> * `cnpg.enabled` defaulted back to `false`, matching 9.x, so a default install
+>   keeps the built-in sqlite userdb and needs no CNPG operator.
+>
+> Licensed GPL-3.0, as upstream.
+
 * [Usage](#usage)
   * [TLDR](#tldr)
   * [Basics](#basics)
