@@ -16,7 +16,8 @@ name: Publish chart
       - 'charts/coturn/Chart.yaml'
 
 permissions:
-  contents: read
+  # contents: write so the job can push the version tag after publishing.
+  contents: write
   packages: write
 
 jobs:
@@ -25,6 +26,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7.0.1
+        with:
+          # Full history so the tagging step can see whether this version was
+          # already tagged; the default shallow checkout fetches no tags.
+          fetch-depth: 0
 
       - name: Setup Helm
         uses: azure/setup-helm@v5
@@ -61,3 +66,25 @@ jobs:
 
           helm package charts/coturn --destination dist
           helm push "dist/coturn-${version}.tgz" "$REGISTRY"
+
+      # Kept separate from the push above, and idempotent, so that a re-run or a
+      # version that was already published still ends up with its tag. The tag
+      # is what says which source produced a given artifact in the registry.
+      - name: Tag the published version
+        run: |
+          version="$(awk '/^version:/ {print $2; exit}' charts/coturn/Chart.yaml)"
+
+          if [ -z "$version" ]; then
+            echo "Could not read a version from charts/coturn/Chart.yaml"
+            exit 1
+          fi
+
+          if git rev-parse -q --verify "refs/tags/${version}" >/dev/null; then
+            echo "Tag ${version} already exists, leaving it alone."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "$version" -m "coturn ${version}"
+          git push origin "refs/tags/${version}"
