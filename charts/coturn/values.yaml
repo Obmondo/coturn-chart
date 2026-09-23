@@ -414,14 +414,14 @@ containerSecurityContext:
   # -- allow priviledged access
   allowPrivilegeEscalation: false
 
-# PostgreSQL Database configuration for Synapse and MAS, for more options:
+# PostgreSQL database configuration, for more options:
 # https://github.com/cloudnative-pg/charts/tree/main/charts/cluster
 cnpg:
   # -- Whether to deploy the Cloud Native Postgresql Cluster sub chart
   # If cnpg.enabled is set to true, externalDatabase.enabled must be set to false
   # else if externalDatabase.enabled is set to true, cnpg.enabled must be set to false.
   # NOTE: if using this Cluster chart, you must already have Cloud Native PostgreSQL Operator installed!
-  enabled: true
+  enabled: false
   fullnameOverride: coturn-postgres
   name: coturn-postgres
 
