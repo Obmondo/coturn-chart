@@ -1,19 +1,16 @@
 ---
 name: Publish chart
 
-# The upstream release pipeline lives in .forgejo/ and publishes to Harbor,
-# Forgejo and Codeberg. That does not run on GitHub, so this fork publishes the
-# chart to our own OCI registry instead, the same way kubeaid publishes its
-# first-party charts: tagged with the chart's own Chart.yaml version, and a
-# version already present in the registry is never republished.
+# Upstream's release pipeline lives in .forgejo/ and publishes to Harbor,
+# Forgejo and Codeberg, none of which run on GitHub. This fork publishes to our
+# own OCI registry when a version tag is pushed: the tag is the release
+# decision, taken deliberately, not a side effect of merging a pull request.
 
 "on":
   workflow_dispatch:
   push:
-    branches:
-      - main
-    paths:
-      - 'charts/coturn/Chart.yaml'
+    tags:
+      - '*.*.*'
 
 permissions:
   contents: read
@@ -31,6 +28,25 @@ jobs:
         with:
           version: 'v3.21.3'
 
+      - name: Resolve the version to publish
+        id: version
+        run: |
+          version="$(awk '/^version:/ {print $2; exit}' charts/coturn/Chart.yaml)"
+
+          if [ -z "$version" ]; then
+            echo "Could not read a version from charts/coturn/Chart.yaml"
+            exit 1
+          fi
+
+          # On a tag push the tag names the release, so it has to agree with the
+          # chart it is releasing - otherwise the artifact and its tag disagree.
+          if [ "${GITHUB_REF_TYPE}" = "tag" ] && [ "${GITHUB_REF_NAME}" != "$version" ]; then
+            echo "Tag ${GITHUB_REF_NAME} does not match Chart.yaml version ${version}"
+            exit 1
+          fi
+
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+
       - name: Log in to GHCR
         env:
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -42,16 +58,10 @@ jobs:
       - name: Package and push
         env:
           REGISTRY: oci://ghcr.io/obmondo/charts
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          version="$(awk '/^version:/ {print $2; exit}' charts/coturn/Chart.yaml)"
-
-          if [ -z "$version" ]; then
-            echo "Could not read a version from charts/coturn/Chart.yaml"
-            exit 1
-          fi
-
-          if helm show chart "${REGISTRY}/coturn" --version "$version" >/dev/null 2>&1; then
-            echo "coturn ${version} is already published, skipping."
+          if helm show chart "${REGISTRY}/coturn" --version "$VERSION" >/dev/null 2>&1; then
+            echo "coturn ${VERSION} is already published, skipping."
             exit 0
           fi
 
@@ -60,4 +70,4 @@ jobs:
           helm dependency update charts/coturn
 
           helm package charts/coturn --destination dist
-          helm push "dist/coturn-${version}.tgz" "$REGISTRY"
+          helm push "dist/coturn-${VERSION}.tgz" "$REGISTRY"

@@ -1,0 +1,26 @@
+# Releases are cut with cocogitto: `cog bump --patch` (or --minor / --major)
+# rewrites the chart version, commits it, tags it and pushes. The pushed tag is
+# what the Publish chart workflow releases from, and that workflow refuses to
+# publish when the tag and Chart.yaml disagree - so the bump has to touch both,
+# which is exactly what the pre-bump hook below is for.
+#
+# Tags are bare semver with no "v" prefix, matching the 9.x series this fork
+# inherited from upstream.
+
+# Releases must originate from main. cog refuses `cog bump` from any branch not
+# in this list — stops accidental bumps from feature branches where the bump
+# commit would end up off main and the post-bump push couldn't reconcile it.
+branch_whitelist = ["main"]
+
+pre_bump_hooks = [
+  # The chart version is the artifact version: the release workflow reads it
+  # out of Chart.yaml and packages under it. Anchored at column 0 so the
+  # dependencies' own version fields are left alone.
+  "sed -i -E 's|^version: .*|version: {{version}}|' charts/coturn/Chart.yaml",
+]
+
+post_bump_hooks = [
+  "git push origin main {{version_tag}}",
+]
+
+ignore_merge_commits = true
